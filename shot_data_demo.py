@@ -21,14 +21,16 @@ class ShotData:
 
     @classmethod
     def from_metadata(cls, metadata):
-        if all(key in metadata for key in ["sequence", "shot", "camera", "version"]):
-            return cls(
-                metadata["sequence"],
-                metadata["shot"],
-                metadata["camera"],
-                metadata["version"]
-            )
-        return None
+        required_fields = ["sequence", "shot", "camera", "version"]
+        missing = [key for key in required_fields if key not in metadata]
+        if missing:
+            raise ValueError(f"Missing metadata field(s): {', '.join(missing)}")
+        return cls(
+            metadata["sequence"],
+            metadata["shot"],
+            metadata["camera"],
+            metadata["version"]
+        )
 
     def __repr__(self):
         return f"<ShotData {self.shot_id}>"
